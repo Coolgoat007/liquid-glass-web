@@ -23,7 +23,11 @@ function buildDispMap() {
     for (let x = 0; x < W; x++) {
       const px = x - W / 2, py = y - H / 2;
       const d  = sdf(px, py);
-      const t  = ss(-EDGE, 0, d); // 0 = center, 1 = edge
+      // rise from center to the rim, then taper back to 0 across the outer ~4px
+      // so the very edge never samples the transparent area outside the shape
+      const edge  = ss(-EDGE, 0, d);   // 0 at center → 1 at rim
+      const taper = ss(0, -4, d);      // 1 inside → 0 exactly at the rim
+      const t  = edge * taper;
       const gx = (sdf(px + 1, py) - sdf(px - 1, py)) / 2;
       const gy = (sdf(px, py + 1) - sdf(px, py - 1)) / 2;
       const len = Math.sqrt(gx * gx + gy * gy) || 1;

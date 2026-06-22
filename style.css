@@ -73,9 +73,9 @@ p {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  backdrop-filter: blur(var(--blur, 3px)) saturate(var(--sat, 160%)) brightness(1.08);
-  -webkit-backdrop-filter: blur(var(--blur, 3px)) saturate(var(--sat, 160%)) brightness(1.08);
-  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(var(--blur, 3px)) saturate(var(--sat, 160%));
+  -webkit-backdrop-filter: blur(var(--blur, 3px)) saturate(var(--sat, 160%));
+  background: transparent;
   filter: url(#glass-refract);
 }
 
