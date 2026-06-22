@@ -1,0 +1,138 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  background: #0e0e1c;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.content {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 80px 32px 200px;
+  user-select: none;
+}
+
+h1 {
+  font-size: clamp(30px, 5vw, 50px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+
+.lead {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.52);
+  line-height: 1.75;
+  margin-bottom: 52px;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 44px 0 12px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+p {
+  font-size: 15px;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 18px;
+}
+
+/* ——— draggable glass ——— */
+
+.glass-drag {
+  position: fixed;
+  top: 100px;
+  left: calc(50% - 190px);
+  width: 380px;
+  height: 240px;
+  border-radius: 30px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  will-change: transform;
+  overflow: hidden;
+  transform-origin: center;
+  transition: transform 0.2s ease-out;
+
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.glass-drag:active { cursor: grabbing; }
+
+/* backdrop + SDF chromatic aberration filter */
+.glass-body {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  backdrop-filter: blur(var(--blur, 3px)) saturate(var(--sat, 160%)) brightness(1.08);
+  -webkit-backdrop-filter: blur(var(--blur, 3px)) saturate(var(--sat, 160%)) brightness(1.08);
+  background: rgba(255, 255, 255, 0.04);
+  filter: url(#glass-refract);
+}
+
+/* WebkitMask XOR border ring — subtle, flows with mouse offset.
+   NOTE: no mix-blend-mode here on purpose. A blended child would isolate
+   .glass-drag into a group and cut off .glass-body's backdrop-filter from
+   the page behind it, killing the refraction. */
+.glass-border {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  z-index: 2;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.5),
+    inset 0 1px 3px rgba(255, 255, 255, 0.25),
+    0 1px 4px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(
+    var(--ba, 135deg),
+    rgba(255, 255, 255, 0.0) 0%,
+    rgba(255, 255, 255, var(--b1, 0.35)) var(--p1, 33%),
+    rgba(255, 255, 255, var(--b2, 0.7)) var(--p2, 66%),
+    rgba(255, 255, 255, 0.12) 100%
+  );
+}
+
+.controls {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: auto 130px 48px;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 16px 22px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.controls .val {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+input[type="range"] {
+  width: 130px;
+  accent-color: white;
+  cursor: pointer;
+}

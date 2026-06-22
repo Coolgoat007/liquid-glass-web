@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liquid Glass</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <filter id="glass-refract" x="-4%" y="-4%" width="108%" height="108%" color-interpolation-filters="sRGB">
+        <feImage id="glass-disp-img" href="" preserveAspectRatio="none" result="map"/>
+        <feDisplacementMap id="dm-r" in="SourceGraphic" in2="map" scale="20" xChannelSelector="R" yChannelSelector="G" result="dR"/>
+        <feColorMatrix in="dR" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cR"/>
+        <feDisplacementMap id="dm-g" in="SourceGraphic" in2="map" scale="17" xChannelSelector="R" yChannelSelector="G" result="dG"/>
+        <feColorMatrix in="dG" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cG"/>
+        <feDisplacementMap id="dm-b" in="SourceGraphic" in2="map" scale="14" xChannelSelector="R" yChannelSelector="G" result="dB"/>
+        <feColorMatrix in="dB" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="cB"/>
+        <feBlend in="cR" in2="cG" mode="screen" result="rg"/>
+        <feBlend in="rg" in2="cB" mode="screen"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <article class="content">
+    <h1>液态玻璃界面设计</h1>
+    <p class="lead">苹果在 iOS 26 中引入了全新的 Liquid Glass 设计语言，将材质的真实感推向了新的维度。</p>
+
+    <h2>折射与透明</h2>
+    <p>玻璃最迷人的物理特性，在于它同时具有反射与透射两种光学行为。当光线穿越玻璃界面时，由于折射率的差异，光路发生偏折，边缘处产生棱镜色散，将白光分解为细微的彩色光谱。</p>
+    <p>在数字界面中模拟这种效果，需要精确还原三个层次：背景内容的可见性、高光与反射的分布、以及边缘处独特的折射畸变。拖动上方的玻璃，观察文字穿过玻璃边缘时产生的偏折。</p>
+
+    <h2>景深与材质</h2>
+    <p>真实的玻璃具有厚度。这种厚度在界面中体现为层次感——内容通过玻璃看起来比直接看要稍微模糊一些，而玻璃自身的高光却异常清晰锐利，仿佛悬浮在屏幕表面之上。</p>
+    <p>饱和度的微妙提升让玻璃后方的颜色更加鲜活，犹如为画面套上了一层轻薄的滤镜，保留原始信息的同时增添了一丝通透感。</p>
+
+    <h2>动态高光</h2>
+    <p>苹果的实现中，玻璃上的高光会随触摸位置动态变化。这种实时响应让材质感觉真实可信，而非静态贴图的视觉欺骗。移动鼠标时，观察玻璃表面高光的细微偏移。</p>
+    <p>细节决定成败。内边框顶部的亮线、底部的暗线、以及四周半透明的轮廓，共同构建了玻璃材质的立体感，让人不由自主地想要触碰。</p>
+
+    <h2>边缘色散</h2>
+    <p>棱镜效应使玻璃边缘产生轻微的色差——红、绿、蓝三个颜色通道发生不同程度的折射偏移。这是真实玻璃的物理特征，也是数字玻璃质感中最难模拟却最令人信服的细节之一。</p>
+  </article>
+
+  <div class="glass-drag" id="glass">
+    <div class="glass-body"></div>
+    <div class="glass-border"></div>
+  </div>
+
+  <div class="controls">
+    <label>折射</label>
+    <input type="range" id="disp-slider" min="0" max="60" value="20" step="1">
+    <span class="val" id="disp-val">20</span>
+
+    <label>模糊</label>
+    <input type="range" id="blur-slider" min="0" max="20" value="3" step="0.5">
+    <span class="val" id="blur-val">3px</span>
+
+    <label>饱和</label>
+    <input type="range" id="sat-slider" min="100" max="260" value="160" step="5">
+    <span class="val" id="sat-val">160%</span>
+
+    <label>色散</label>
+    <input type="range" id="ab-slider" min="0" max="10" value="3" step="0.5">
+    <span class="val" id="ab-val">3</span>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
