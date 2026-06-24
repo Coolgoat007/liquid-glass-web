@@ -96,6 +96,18 @@ function update() {
   glass.style.setProperty("--b2", (0.70 + Math.abs(offX) * 0.012).toFixed(3));
   glass.style.setProperty("--p1", `${Math.max(10, 33 + offY * 0.3).toFixed(1)}%`);
   glass.style.setProperty("--p2", `${Math.min(90, 66 + offY * 0.4).toFixed(1)}%`);
+
+  // specular sheen tracks the cursor across the surface; rests near the
+  // top-center when the pointer is away
+  if (lastX < 0) {
+    glass.style.setProperty("--mx", "50%");
+    glass.style.setProperty("--my", "26%");
+  } else {
+    const mx = Math.max(-15, Math.min(115, 50 + offX));
+    const my = Math.max(-15, Math.min(115, 50 + offY));
+    glass.style.setProperty("--mx", `${mx.toFixed(1)}%`);
+    glass.style.setProperty("--my", `${my.toFixed(1)}%`);
+  }
 }
 
 document.addEventListener("mousemove", (e) => {
